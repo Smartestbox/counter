@@ -41,11 +41,12 @@ html {
   border-radius: 7px;
 }
 
-.countValue {
-  font-size: 3rem;
+.normalText {
+  font-size: 2rem;
 }
 
 .redText {
+  font-size: 2rem;
   color: red;
 }
 
