@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useState} from 'react';
+import React, {ChangeEvent, useEffect, useState} from 'react';
 import styles from './App.module.css';
 import Button from "./Button";
 
@@ -7,6 +7,27 @@ function App() {
     const [maxValue, setMaxValue] = useState<number>(5)
     const [displayValue, setDisplayValue] = useState<number>(startValue)
     const [isDisplayActive, setIsDisplayActive] = useState<boolean>(true)
+
+    useEffect(() => {
+        let localStartValue = localStorage.getItem('startValue')
+        let localMaxValue = localStorage.getItem('maxValue')
+        let localDisplayValue = localStorage.getItem('displayValue')
+
+        if(localStartValue) {
+            setStartValue(JSON.parse(localStartValue))
+        }
+        if(localMaxValue) {
+            setMaxValue(JSON.parse(localMaxValue))
+        }
+        if(localDisplayValue) {
+            setDisplayValue(JSON.parse(localDisplayValue))
+        }
+    }, [])
+
+    useEffect(() => {
+        localStorage.setItem('displayValue', JSON.stringify(displayValue))
+    }, [displayValue])
+
     const handleOnIncClick = () => {
         if (displayValue < maxValue && isDisplayActive) {
             setDisplayValue(displayValue + 1)
@@ -31,6 +52,8 @@ function App() {
         if(displayMessage !== 'incorrect') {
             setIsDisplayActive(true)
             setDisplayValue(startValue)
+            localStorage.setItem('startValue', JSON.stringify(startValue))
+            localStorage.setItem('maxValue', JSON.stringify(maxValue))
         }
     }
 

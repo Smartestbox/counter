@@ -14,6 +14,7 @@ html {
   align-items: center;
   gap: 100px;
   height: 100vh;
+  min-width: 830px;
   background-color: #234E70;
   font-size: 2rem;
   font-weight: bold;
