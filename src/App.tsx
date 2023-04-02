@@ -1,59 +1,56 @@
 import React, {ChangeEvent, useEffect, useState} from 'react';
 import styles from './App.module.css';
 import Button from "./Button";
+import {useDispatch, useSelector} from "react-redux";
+import {AppRootStateType} from "./redux/store";
+import {
+    changeDisplayStateAC,
+    changeMaxValueAC,
+    changeStartValueAC,
+    incrementAC,
+    resetAC,
+    setAC
+} from "./redux/counterReducer";
 
 function App() {
-    const [startValue, setStartValue] = useState<number>(0)
-    const [maxValue, setMaxValue] = useState<number>(5)
-    const [displayValue, setDisplayValue] = useState<number>(startValue)
-    const [isDisplayActive, setIsDisplayActive] = useState<boolean>(true)
-
-    useEffect(() => {
-        let localStartValue = localStorage.getItem('startValue')
-        let localMaxValue = localStorage.getItem('maxValue')
-        let localDisplayValue = localStorage.getItem('displayValue')
-
-        if(localStartValue) {
-            setStartValue(JSON.parse(localStartValue))
-        }
-        if(localMaxValue) {
-            setMaxValue(JSON.parse(localMaxValue))
-        }
-        if(localDisplayValue) {
-            setDisplayValue(JSON.parse(localDisplayValue))
-        }
-    }, [])
-
-    useEffect(() => {
-        localStorage.setItem('displayValue', JSON.stringify(displayValue))
-    }, [displayValue])
-
+    const startValue = useSelector<AppRootStateType, number>(state =>
+        state.counter.startValue
+    )
+    const maxValue = useSelector<AppRootStateType, number>(state =>
+        state.counter.maxValue
+    )
+    const displayValue = useSelector<AppRootStateType, number>(state =>
+        state.counter.displayValue
+    )
+    const isDisplayActive = useSelector<AppRootStateType, boolean>(state =>
+        state.counter.isDisplayActive
+    )
+    const dispatch = useDispatch()
     const handleOnIncClick = () => {
         if (displayValue < maxValue && isDisplayActive) {
-            setDisplayValue(displayValue + 1)
+            dispatch(incrementAC())
         }
     }
     const handleOnResetClick = () => {
-        if(isDisplayActive) {
-            setDisplayValue(startValue)
+        if (isDisplayActive) {
+            dispatch(resetAC())
         }
     }
-
     const handleOnChangeInputMaxValue = (e: ChangeEvent<HTMLInputElement>) => {
-        if (isDisplayActive) {setIsDisplayActive(false)}
-        setMaxValue(+(e.currentTarget.value))
+        if (isDisplayActive) {
+            dispatch(changeDisplayStateAC(false))
+        }
+        dispatch(changeMaxValueAC(+(e.currentTarget.value)))
     }
     const handleOnChangeInputStartValue = (e: ChangeEvent<HTMLInputElement>) => {
-        setIsDisplayActive(false)
-        setStartValue(+(e.currentTarget.value))
+        if (isDisplayActive) {
+            dispatch(changeDisplayStateAC(false))
+        }
+        dispatch(changeStartValueAC(+(e.currentTarget.value)))
     }
-
     const handleOnSetClick = () => {
-        if(displayMessage !== 'incorrect') {
-            setIsDisplayActive(true)
-            setDisplayValue(startValue)
-            localStorage.setItem('startValue', JSON.stringify(startValue))
-            localStorage.setItem('maxValue', JSON.stringify(maxValue))
+        if (displayMessage !== 'incorrect') {
+            dispatch(setAC())
         }
     }
 
@@ -87,10 +84,10 @@ function App() {
                 </div>
                 <div className={styles.buttons}>
                     <Button className={isDisplayActive ? styles.btnDisabled : styles.btn}
+                            disabled={isDisplayActive}
                             handleClick={handleOnSetClick}
-                    >
-                        set
-                    </Button>
+                            title={'set'}
+                    />
                 </div>
             </div>
             <div className={styles.container}>
@@ -101,16 +98,16 @@ function App() {
                 </div>
                 <div className={styles.buttons}>
                     <Button className={displayValue < maxValue && isDisplayActive ? styles.btn : styles.btnDisabled}
+                            disabled={!isDisplayActive}
                             handleClick={handleOnIncClick}
-                    >
-                        inc
-                    </Button>
+                            title={'inc'}
+                    />
                     <Button
-                        className={startValue < maxValue && isDisplayActive ? styles.btn : styles.btnDisabled}
+                        className={displayValue > startValue && isDisplayActive ? styles.btn : styles.btnDisabled}
+                        disabled={displayValue === startValue}
                         handleClick={handleOnResetClick}
-                    >
-                        reset
-                    </Button>
+                        title={'reset'}
+                    />
                 </div>
 
             </div>

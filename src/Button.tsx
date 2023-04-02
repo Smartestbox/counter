@@ -2,24 +2,24 @@ import React from 'react';
 
 type ButtonPropsType = {
     className: string
-    // disabled: boolean
+    disabled: boolean
     handleClick: () => void
-    children: string
+    title: string
 }
 
 const Button: React.FC<ButtonPropsType> = ({
                                                className,
-                                               // disabled,
+                                               disabled,
                                                handleClick,
-                                               children,
+                                               title,
                                            }) => {
     return (
         <button
             onClick={handleClick}
             className={className}
-            // disabled={disabled}
+            disabled={disabled}
         >
-            {children}
+            {title}
         </button>
     );
 };
