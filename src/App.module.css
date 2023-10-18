@@ -27,7 +27,7 @@ html {
   border: 3px solid #FBF8BE;
   border-radius: 7px;
   height: 300px;
-  width: 500px;
+  width: 700px;
   color: #FBF8BE;
   padding: 20px;
 }
@@ -40,6 +40,12 @@ html {
   flex-wrap: wrap;
   border: 3px solid #FBF8BE;
   border-radius: 7px;
+}
+
+.displayMessage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .normalText {

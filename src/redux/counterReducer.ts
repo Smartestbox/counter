@@ -1,24 +1,4 @@
-type IncrementAT = {
-    type: 'INCREMENT-DISPLAY-VALUE'
-}
-type ResetAT = {
-    type: 'RESET-DISPLAY-VALUE'
-}
-type SetAT = {
-    type: 'SET-VALUES'
-}
-type ChangeDisplayStateAT = {
-    type: 'CHANGE-DISPLAY-STATE'
-    displayState: boolean
-}
-type ChangeMaxValueAT = {
-    type: 'CHANGE-MAX-VALUE'
-    maxValue: number
-}
-type ChangeStartValueAT = {
-    type: 'CHANGE-START-VALUE'
-    startValue: number
-}
+
 type AllActionTypes =
     ReturnType<typeof incrementAC>
     | ReturnType<typeof resetAC>
@@ -30,9 +10,11 @@ type AllActionTypes =
 type InitialStateType = typeof initialState
 
 const initialState = {
-    startValue: 0,
-    maxValue: 5,
-    displayValue: 0,
+    values: {
+        startValue: 0,
+        maxValue: 5,
+        displayValue: 0,
+    },
     isDisplayActive: true
 }
 
@@ -41,13 +23,13 @@ const counterReducer = (state: InitialStateType = initialState, action: AllActio
         case 'INCREMENT-DISPLAY-VALUE':
             return {
                 ...state,
-                displayValue: state.displayValue + 1
+                values: {...state.values, displayValue: state.values.displayValue + 1}
             }
         case 'RESET-DISPLAY-VALUE': {
             if (state.isDisplayActive) {
                 return {
                     ...state,
-                    displayValue: state.startValue
+                    values: {...state.values, displayValue: state.values.startValue}
                 }
             } else {
                 return state
@@ -57,7 +39,7 @@ const counterReducer = (state: InitialStateType = initialState, action: AllActio
             return {
                 ...state,
                 isDisplayActive: true,
-                displayValue: state.startValue
+                values: {...state.values, displayValue: state.values.startValue}
             }
         case 'CHANGE-DISPLAY-STATE':
             return {
@@ -67,26 +49,26 @@ const counterReducer = (state: InitialStateType = initialState, action: AllActio
         case 'CHANGE-MAX-VALUE':
             return {
                 ...state,
-                maxValue: action.maxValue
+                values: {...state.values, maxValue: action.maxValue}
             }
         case 'CHANGE-START-VALUE':
             return {
                 ...state,
-                startValue: action.startValue
+                values: {...state.values, startValue: action.startValue}
             }
         default:
             return state
     }
 }
 
-
-export const incrementAC = (): IncrementAT => ({type: 'INCREMENT-DISPLAY-VALUE'})
-export const resetAC = (): ResetAT => ({type: 'RESET-DISPLAY-VALUE'})
-export const setAC = (): SetAT => ({type: 'SET-VALUES'})
-export const changeDisplayStateAC = (displayState: boolean): ChangeDisplayStateAT => (
-    {type: 'CHANGE-DISPLAY-STATE', displayState}
-)
-export const changeMaxValueAC = (maxValue: number): ChangeMaxValueAT => ({type: 'CHANGE-MAX-VALUE', maxValue})
-export const changeStartValueAC = (startValue: number): ChangeStartValueAT => ({type: 'CHANGE-START-VALUE', startValue})
+export const incrementAC = () => ({type: 'INCREMENT-DISPLAY-VALUE'} as const)
+export const resetAC = () => ({type: 'RESET-DISPLAY-VALUE'} as const)
+export const setAC = () => ({type: 'SET-VALUES'} as const)
+export const changeDisplayStateAC = (displayState: boolean) =>
+    ({type: 'CHANGE-DISPLAY-STATE', displayState} as const)
+export const changeMaxValueAC = (maxValue: number) =>
+    ({type: 'CHANGE-MAX-VALUE', maxValue} as const)
+export const changeStartValueAC = (startValue: number) =>
+    ({type: 'CHANGE-START-VALUE', startValue} as const)
 
 export default counterReducer
