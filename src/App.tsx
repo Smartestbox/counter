@@ -4,13 +4,13 @@ import {useSelector} from "react-redux";
 import {AppRootStateType, useAppDispatch} from "./redux/store";
 import Settings from "./Components/Settings";
 import Display from "./Components/Display";
-import {getValuesTC} from "./redux/counterReducer";
+// import {getValuesTC} from "./redux/counterReducer";
 
 function App() {
     const dispatch = useAppDispatch()
 
     useEffect(() => {
-        dispatch(getValuesTC())
+        // dispatch(getValuesTC())
     }, []);
 
     const isDisplayActive = useSelector<AppRootStateType, boolean>(state =>

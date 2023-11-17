@@ -3,11 +3,8 @@ import styles from "../App.module.css";
 import {useSelector} from "react-redux";
 import {AppRootStateType, useAppDispatch} from "../redux/store";
 import {
-    changeDisplayStateAC,
     changeDisplayStateTC,
-    incrementDisplayValueAC,
     incrementTC,
-    resetAC,
     resetTC
 } from "../redux/counterReducer";
 import Button from "./Button";

@@ -12,7 +12,7 @@ import Button from "./Button";
 
 const Settings = () => {
 
-    const [displayMessage, setDisplayMessage] = useState<'incorrect' | 'enter values and press \'set\''>('enter values and press \'set\'')
+    const [displayMessage, setDisplayMessage] = useState<string>('enter values and press \'set\'')
 
     const [displayClassName, setDisplayClassName] = useState(styles.countValue) // how to type css objs
 
@@ -28,20 +28,18 @@ const Settings = () => {
     const isDisplayActive = useSelector<AppRootStateType, boolean>(state =>
         state.counter.isDisplayActive
     )
+
     const dispatch = useAppDispatch()
 
     useEffect(() => {
-        startValue >= maxValue
-        || startValue < 0
-        || maxValue < 0 ? setDisplayMessage('incorrect')
+        startValue >= maxValue || startValue < 0 || maxValue < 0
+            ? setDisplayMessage('incorrect values')
             : setDisplayMessage('enter values and press \'set\'')
     }, [startValue, maxValue])
 
     useEffect(() => {
-        startValue >= maxValue // useState + useEffect
-        || startValue < 0
-        || maxValue < 0
-        || (displayValue === maxValue && isDisplayActive) ? setDisplayClassName(styles.redText)
+        startValue >= maxValue || startValue < 0 || maxValue < 0 || (displayValue === maxValue && isDisplayActive)
+            ? setDisplayClassName(styles.redText)
             : setDisplayClassName(styles.countValue)
     }, [startValue, maxValue, displayValue, isDisplayActive])
 
@@ -60,7 +58,7 @@ const Settings = () => {
     }
 
     const handleOnSetClick = useCallback(() => {
-        if (displayMessage !== 'incorrect') {
+        if (displayMessage !== 'incorrect values') {
             dispatch(setValuesTC())
         }
     }, [displayMessage])
@@ -85,8 +83,8 @@ const Settings = () => {
                 <span className={displayClassName}>{displayMessage}</span>
             </div>
             <div className={styles.buttons}>
-                <Button className={displayMessage === 'incorrect' ? styles.btnDisabled : styles.btn}
-                        disabled={displayMessage === 'incorrect'}
+                <Button className={displayMessage === 'incorrect values' ? styles.btnDisabled : styles.btn}
+                        disabled={displayMessage === 'incorrect values'}
                         handleClick={handleOnSetClick}
                         title={'set'}
                 />
