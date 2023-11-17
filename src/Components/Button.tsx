@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {memo} from 'react';
 
 type ButtonPropsType = {
     className: string
@@ -7,7 +7,7 @@ type ButtonPropsType = {
     title: string
 }
 
-const Button: React.FC<ButtonPropsType> = ({
+const Button: React.FC<ButtonPropsType> = memo(({
                                                className,
                                                disabled,
                                                handleClick,
@@ -22,6 +22,6 @@ const Button: React.FC<ButtonPropsType> = ({
             {title}
         </button>
     );
-};
+})
 
 export default Button;

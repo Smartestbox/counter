@@ -1,11 +1,20 @@
-import React, {ChangeEvent} from 'react';
-import styles from "./App.module.css";
+import React, {ChangeEvent, useCallback, useEffect, useState} from 'react';
+import styles from "../App.module.css";
+import {useSelector} from "react-redux";
+import {AppRootStateType, useAppDispatch} from "../redux/store";
+import {
+    changeDisplayStateAC,
+    changeMaxValueAC,
+    changeStartValueAC,
+    setValuesTC
+} from "../redux/counterReducer";
 import Button from "./Button";
-import {useDispatch, useSelector} from "react-redux";
-import {AppRootStateType} from "./redux/store";
-import {changeDisplayStateAC, changeMaxValueAC, changeStartValueAC, setAC} from "./redux/counterReducer";
 
 const Settings = () => {
+
+    const [displayMessage, setDisplayMessage] = useState<'incorrect' | 'enter values and press \'set\''>('enter values and press \'set\'')
+
+    const [displayClassName, setDisplayClassName] = useState(styles.countValue) // how to type css objs
 
     const startValue = useSelector<AppRootStateType, number>(state =>
         state.counter.values.startValue
@@ -19,7 +28,22 @@ const Settings = () => {
     const isDisplayActive = useSelector<AppRootStateType, boolean>(state =>
         state.counter.isDisplayActive
     )
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
+
+    useEffect(() => {
+        startValue >= maxValue
+        || startValue < 0
+        || maxValue < 0 ? setDisplayMessage('incorrect')
+            : setDisplayMessage('enter values and press \'set\'')
+    }, [startValue, maxValue])
+
+    useEffect(() => {
+        startValue >= maxValue // useState + useEffect
+        || startValue < 0
+        || maxValue < 0
+        || (displayValue === maxValue && isDisplayActive) ? setDisplayClassName(styles.redText)
+            : setDisplayClassName(styles.countValue)
+    }, [startValue, maxValue, displayValue, isDisplayActive])
 
     const handleOnChangeInputMaxValue = (e: ChangeEvent<HTMLInputElement>) => {
         if (isDisplayActive) {
@@ -35,37 +59,26 @@ const Settings = () => {
         dispatch(changeStartValueAC(+(e.currentTarget.value)))
     }
 
-    const handleOnSetClick = () => {
+    const handleOnSetClick = useCallback(() => {
         if (displayMessage !== 'incorrect') {
-            dispatch(setAC())
+            dispatch(setValuesTC())
         }
-    }
-
-    const displayMessage = startValue >= maxValue // useState + useEffect
-    || startValue < 0
-    || maxValue < 0 ? 'incorrect'
-        : 'enter values and press \'set\''
-
-    const displayClassName = startValue >= maxValue // useState + useEffect
-    || startValue < 0
-    || maxValue < 0
-    || (displayValue === maxValue && isDisplayActive) ? styles.redText
-        : styles.countValue
+    }, [displayMessage])
 
     return (
         <div className={styles.container}>
             <div className={styles.display}>
-                <span>max value:</span>
-                <input
-                    type="number"
-                    value={maxValue}
-                    onChange={handleOnChangeInputMaxValue}
-                />
                 <span>start value:</span>
                 <input
                     type="number"
                     value={startValue}
                     onChange={handleOnChangeInputStartValue}
+                />
+                <span>max value:</span>
+                <input
+                    type="number"
+                    value={maxValue}
+                    onChange={handleOnChangeInputMaxValue}
                 />
             </div>
             <div className={styles.displayMessage}>

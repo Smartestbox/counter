@@ -1,9 +1,16 @@
-import React from 'react';
-import styles from "./App.module.css";
+import React, {useCallback} from 'react';
+import styles from "../App.module.css";
+import {useSelector} from "react-redux";
+import {AppRootStateType, useAppDispatch} from "../redux/store";
+import {
+    changeDisplayStateAC,
+    changeDisplayStateTC,
+    incrementDisplayValueAC,
+    incrementTC,
+    resetAC,
+    resetTC
+} from "../redux/counterReducer";
 import Button from "./Button";
-import {useDispatch, useSelector} from "react-redux";
-import {AppRootStateType} from "./redux/store";
-import {changeDisplayStateAC, incrementAC, resetAC} from "./redux/counterReducer";
 
 
 
@@ -21,23 +28,23 @@ const Display = () => {
     const isDisplayActive = useSelector<AppRootStateType, boolean>(state =>
         state.counter.isDisplayActive
     )
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
 
-    const handleOnIncClick = () => {
+    const handleOnIncClick = useCallback(() => {
         if (displayValue < maxValue && isDisplayActive) {
-            dispatch(incrementAC())
+            dispatch(incrementTC())
         }
-    }
+    }, [displayValue, maxValue, isDisplayActive])
 
-    const handleOnResetClick = () => {
+    const handleOnResetClick = useCallback(() => {
         if (isDisplayActive) {
-            dispatch(resetAC())
+            dispatch(resetTC())
         }
-    }
+    }, [isDisplayActive] )
 
-    const handleOnSettingsClick = () => {
-        dispatch(changeDisplayStateAC(false))
-    }
+    const handleOnSettingsClick = useCallback(() => {
+        dispatch(changeDisplayStateTC(false))
+    }, [] )
 
     return (
         <div className={styles.container}>
